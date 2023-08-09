@@ -1,14 +1,8 @@
 package com.couse.projetoSpring.config;
 
-import com.couse.projetoSpring.entities.Category;
+import com.couse.projetoSpring.entities.*;
 import com.couse.projetoSpring.entities.Enums.OrderStatus;
-import com.couse.projetoSpring.entities.Order;
-import com.couse.projetoSpring.entities.Product;
-import com.couse.projetoSpring.entities.User;
-import com.couse.projetoSpring.repositories.CategoryRepository;
-import com.couse.projetoSpring.repositories.OrderRepository;
-import com.couse.projetoSpring.repositories.ProductRepository;
-import com.couse.projetoSpring.repositories.UserRepository;
+import com.couse.projetoSpring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -21,15 +15,16 @@ import java.util.Arrays;
 public class TestConfig implements CommandLineRunner{
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private OrderRepository orderRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+
     @Override
     public void run(String... args) throws Exception {
         Category cat1 = new Category(null, "Electronics");
@@ -59,11 +54,17 @@ public class TestConfig implements CommandLineRunner{
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.PAID,u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.DELIVERED,u1);
 
-
-
-
         userRepository.saveAll(Arrays.asList(u1,u2));
         orderRepository.saveAll(Arrays.asList(o1,o2,o3));
+
+
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+
 
     }
 }
