@@ -3,6 +3,7 @@ package com.couse.projetoSpring.entities;
 import com.couse.projetoSpring.entities.Enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -18,11 +19,9 @@ public class Order implements Serializable {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",timezone = "GMT")
     private Instant moment;
-
     private Integer orderStatus;
 
-    @OneToOne(mappedBy = "order",cascade = CascadeType.ALL)
-    private Payment payment;
+
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -30,6 +29,10 @@ public class Order implements Serializable {
 
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
+    @OneToOne(mappedBy = "order",cascade = CascadeType.ALL)
+    private Payment payment;
+
+
     public Order(){}
 
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
@@ -84,6 +87,14 @@ public class Order implements Serializable {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public Double getTotal(){
+        double sum=0.0;
+        for(OrderItem x: items){
+            sum+=x.getSubTotal();
+        }
+        return sum;
     }
 
     @Override
