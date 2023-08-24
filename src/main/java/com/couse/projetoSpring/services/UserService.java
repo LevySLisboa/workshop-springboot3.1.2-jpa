@@ -4,6 +4,7 @@ import com.couse.projetoSpring.entities.User;
 import com.couse.projetoSpring.repositories.UserRepository;
 import com.couse.projetoSpring.services.exceptions.DatabaseException;
 import com.couse.projetoSpring.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,9 +42,13 @@ public class UserService {
     }
 
     public User uptade(Long id,User obj){
-        User entity = repository.getReferenceById(id);
-        uptadeData(entity,obj);
-        return repository.save(entity);
+        try{
+            User entity = repository.getReferenceById(id);
+            uptadeData(entity, obj);
+            return repository.save(entity);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void uptadeData(User entity, User obj) {
