@@ -1,4 +1,4 @@
-package com.couse.projetoSpring.services.exceptions;
+package com.couse.projetoSpring.resources.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
